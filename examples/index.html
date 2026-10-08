@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="pt">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>zopra</title>
+  <style>
+    body { margin: 0; min-height: 100vh; background: #0c0d10; color: #f4f0e8; font-family: sans-serif; }
+    main { max-width: 36rem; margin: 0 auto; padding: 2rem 1rem; }
+    canvas { width: 100%; height: 10rem; margin-top: 1rem; border-radius: 12px; }
+    input, button { font: inherit; }
+    button { height: 2.75rem; border: 0; border-radius: 10px; background: #e3a15a; color: #0c0d10; padding: 0 1rem; }
+    input[type="range"] { width: 100%; }
+  </style>
+</head>
+<body>
+  <main>
+    <div id="app"></div>
+    <canvas id="gpu"></canvas>
+  </main>
+  <script type="module">
+    import { computed, h, hueToRgb, mountFill, signal } from "../src/zopra.js";
+    const hue = signal(28);
+    const count = signal(0);
+    const tone = computed(() => (hue() < 50 ? "quente" : "frio"));
+    document.getElementById("app").append(
+      h("p", null, "matiz ", hue, " · ", tone),
+      h("input", {
+        type: "range", min: "0", max: "360", value: "28",
+        onInput: (event) => hue.set(Number(event.target.value)),
+      }),
+      h("button", { type: "button", onClick: () => count.set((n) => n + 1) }, "cliques ", count),
+    );
+    mountFill(document.getElementById("gpu"), computed(() => hueToRgb(hue())));
+  </script>
+</body>
+</html>

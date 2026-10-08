@@ -1,0 +1,8 @@
+{
+  "name": "zopra",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "./src/zopra.js",
+  "exports": { ".": "./src/zopra.js" }
+}
