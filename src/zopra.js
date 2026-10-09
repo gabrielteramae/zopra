@@ -52,6 +52,22 @@ export function computed(fn) {
     });
     return mirror;
 }
+export function flattenChildren(children) {
+    const flat = [];
+    const visit = (child) => {
+        if (child == null || child === false)
+            return;
+        if (Array.isArray(child)) {
+            for (const item of child)
+                visit(item);
+            return;
+        }
+        flat.push(child);
+    };
+    for (const child of children)
+        visit(child);
+    return flat;
+}
 export function h(tag, props, ...children) {
     const el = document.createElement(tag);
     for (const [key, value] of Object.entries(props ?? {})) {
@@ -70,9 +86,7 @@ export function h(tag, props, ...children) {
             el.setAttribute(key, String(value));
         }
     }
-    for (const child of children) {
-        if (child == null || child === false)
-            continue;
+    for (const child of flattenChildren(children)) {
         if (typeof child === "function") {
             const text = document.createTextNode("");
             el.appendChild(text);
